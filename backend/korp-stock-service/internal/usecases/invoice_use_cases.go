@@ -72,3 +72,16 @@ func (pu *InvoiceUseCase) GetByIdInvoice(id uint) (*domain.Invoice, error) {
 func (pu *InvoiceUseCase) GetListInvoice() ([]domain.Invoice, error) {
 	return pu.Repository.GetList()
 }
+
+func (pu *InvoiceUseCase) UpdateInvoice(id uint, status string) (*domain.Invoice, error) {
+	invoice, err := pu.Repository.GetById(id)
+	if err != nil {
+		fmt.Printf("Ops! Não existe essa nota fiscal na base de dados: %v", err)
+		return nil, err
+	}
+
+	invoice.Status = status
+
+	err = pu.Repository.Update(invoice)
+	return invoice, err
+}

@@ -28,3 +28,7 @@ func (r *InvoiceRepository) GetList() ([]domain.Invoice, error) {
 	err := r.DB.Find(&invoices).Error
 	return invoices, err
 }
+
+func (r *InvoiceRepository) Update(invoice *domain.Invoice) error {
+	return r.DB.Save(invoice).Error
+}
