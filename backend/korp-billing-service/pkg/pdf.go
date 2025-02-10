@@ -6,9 +6,10 @@ import (
 
 	"github.com/Alym62/backend/korp-billing-service/internal/events"
 	"github.com/signintech/gopdf"
+	"github.com/streadway/amqp"
 )
 
-func GeneratePDF(body []byte) error {
+func GeneratePDF(body []byte, channel *amqp.Channel, exchange string, responseQueue string) error {
 	var invoice events.InvoiceCreated
 	err := json.Unmarshal(body, &invoice)
 	if err != nil {
@@ -53,6 +54,45 @@ func GeneratePDF(body []byte) error {
 	}
 
 	fmt.Println("Nota Fiscal gerada com sucesso:", filePath)
+
+	_, err = channel.QueueDeclare(
+		responseQueue,
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		return fmt.Errorf("erro ao declarar fila %s: %v", responseQueue, err)
+	}
+
+	message := map[string]interface{}{
+		"invoiceID": invoice.ID,
+		"status":    "PDF gerado",
+		"filePath":  filePath,
+	}
+
+	messageBody, err := json.Marshal(message)
+	if err != nil {
+		return fmt.Errorf("erro ao criar a mensagem JSON: %v", err)
+	}
+
+	err = channel.Publish(
+		exchange,
+		responseQueue,
+		false,
+		false,
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body:        messageBody,
+		},
+	)
+	if err != nil {
+		return fmt.Errorf("erro ao enviar a mensagem para a fila: %v", err)
+	}
+
+	fmt.Println("Mensagem de confirmação de PDF gerado enviada para a fila:", responseQueue)
 	return nil
 }
 

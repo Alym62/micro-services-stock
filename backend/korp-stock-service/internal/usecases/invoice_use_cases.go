@@ -64,3 +64,11 @@ func (pu *InvoiceUseCase) CreateInvoice(products []domain.Product, quantities []
 
 	return &invoice, nil
 }
+
+func (pu *InvoiceUseCase) GetByIdInvoice(id uint) (*domain.Invoice, error) {
+	return pu.Repository.GetById(id)
+}
+
+func (pu *InvoiceUseCase) GetListInvoice() ([]domain.Invoice, error) {
+	return pu.Repository.GetList()
+}

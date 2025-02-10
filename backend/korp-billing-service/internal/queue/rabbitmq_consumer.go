@@ -102,7 +102,7 @@ func (c *RabbitMQConsumer) ConsumeMessages(url string) {
 
 		for message := range messages {
 			fmt.Println("Mensagem recebida:", string(message.Body))
-			err := pkg.GeneratePDF(message.Body)
+			err = pkg.GeneratePDF(message.Body, c.channel, c.exchange, "products.v1.invoice-event-finish")
 			if err != nil {
 				fmt.Printf("Erro ao processar NF, enviando para DLQ: %v\n", err)
 			}

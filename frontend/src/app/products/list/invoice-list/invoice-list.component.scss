@@ -1,0 +1,17 @@
+.container {
+  padding: 1rem;
+  background-color: #FFF;
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+
+    button {
+      margin-bottom: 1rem;
+    }
+  }
+
+  table {
+    margin-top: 1rem;
+  }
+}

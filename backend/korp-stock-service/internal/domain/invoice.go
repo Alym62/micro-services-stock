@@ -6,7 +6,7 @@ type Invoice struct {
 	gorm.Model
 	ID       uint
 	Products []Product `gorm:"many2many:invoice_products;"`
-	Status   string
+	Status   string    `json:"status"`
 }
 
 type InvoiceProduct struct {

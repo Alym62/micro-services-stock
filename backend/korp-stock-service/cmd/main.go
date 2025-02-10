@@ -8,6 +8,7 @@ import (
 	"github.bom/Alym62/backend/korp-stock-service/internal/queue"
 	"github.bom/Alym62/backend/korp-stock-service/internal/repository"
 	"github.bom/Alym62/backend/korp-stock-service/internal/usecases"
+	"github.bom/Alym62/backend/korp-stock-service/pkg"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,6 +32,7 @@ func main() {
 	productHandler := handlers.NewProductHanlder(productUseCase)
 
 	r := gin.Default()
+	r.Use(pkg.CORSMiddlewares())
 	v1Product := r.Group("/api/v1/product")
 	v1Product.GET("/list", productHandler.GetListProduct)
 	v1Product.GET("/:id", productHandler.GetProduct)
@@ -43,7 +45,10 @@ func main() {
 	invoiceHandler := handlers.NewInvoiceHanlder(invoiceUseCase)
 
 	v1Invoice := r.Group("/api/v1/invoice")
+	v1Invoice.Use(pkg.CORSMiddlewares())
 	v1Invoice.POST("/create", invoiceHandler.CreateInvoice)
+	v1Invoice.GET("/:id", invoiceHandler.GetInvoice)
+	v1Invoice.GET("/list", invoiceHandler.GetListInvoice)
 
 	r.Run(":8080")
 }

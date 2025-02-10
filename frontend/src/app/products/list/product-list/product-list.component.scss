@@ -1,0 +1,13 @@
+.container {
+  padding: 1rem;
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+
+    button {
+      margin-bottom: 1rem;
+    }
+  }
+
+}

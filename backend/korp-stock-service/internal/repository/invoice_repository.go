@@ -16,3 +16,15 @@ func NewInvoiceRepository(db *gorm.DB) *InvoiceRepository {
 func (r *InvoiceRepository) Create(invoice *domain.Invoice) error {
 	return r.DB.Create(invoice).Error
 }
+
+func (r *InvoiceRepository) GetById(id uint) (*domain.Invoice, error) {
+	var invoice domain.Invoice
+	err := r.DB.First(&invoice, id).Error
+	return &invoice, err
+}
+
+func (r *InvoiceRepository) GetList() ([]domain.Invoice, error) {
+	var invoices []domain.Invoice
+	err := r.DB.Find(&invoices).Error
+	return invoices, err
+}
